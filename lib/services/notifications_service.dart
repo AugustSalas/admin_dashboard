@@ -15,4 +15,15 @@ class NotificationsService {
 
     msjKey.currentState!.showSnackBar(snackbar);
   }
+
+    static showSnackbar(String msj) {
+    final snackbar = SnackBar(
+      content: Text(
+        msj,
+        style: const TextStyle(color: Colors.white,fontSize: 20),
+      ),
+    );
+
+    msjKey.currentState!.showSnackBar(snackbar);
+  }
 }
