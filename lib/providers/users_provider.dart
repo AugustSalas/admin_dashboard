@@ -23,6 +23,16 @@ class UsersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<Usuario?> getUserById(String uid) async {
+    try {
+      final resp = await CafeApi.httpGet('/usuarios/$uid');
+      final user = Usuario.fromMap(resp);
+      return user;
+    } catch (e) {
+      return null;
+    }
+  }
+
   void sort<T>(Comparable<T> Function(Usuario user) getField) {
     users.sort(
       (a, b) {
@@ -30,11 +40,24 @@ class UsersProvider extends ChangeNotifier {
         final bValue = getField(b);
 
         return ascending
-        ? Comparable.compare(aValue, bValue)
-        : Comparable.compare(bValue, aValue);
+            ? Comparable.compare(aValue, bValue)
+            : Comparable.compare(bValue, aValue);
       },
     );
     ascending = !ascending;
+    notifyListeners();
+  }
+
+  void refreshUser(Usuario newUser) {
+    users = users
+        .map((user) {
+          if (user.uid == newUser.uid) {
+            user = newUser;
+          }
+          return user;
+        })
+        .cast<Usuario>()
+        .toList();
     notifyListeners();
   }
 }
